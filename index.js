@@ -1,97 +1,33 @@
 import http from "node:http";
 import {
-  createTask,
-  getAllTasks,
-  updateTask,
-  getTaskById,
-  deleteTask,
-} from "./tasks/tasksService.js";
+  createTaskController,
+  deleteTaskController,
+  getAllTasksController,
+  getTaskByIdController,
+  updateTaskController,
+} from "./tasks/tasksController.js";
 
 const server = http.createServer((req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   if (req.method === "GET" && req.url === "/tasks") {
-    const tasks = getAllTasks();
-    res.statusCode = 200;
-    res.end(JSON.stringify(tasks));
-    return;
+    return getAllTasksController(req, res);
   }
 
   if (req.method === "POST" && req.url === "/tasks") {
-    let body = "";
-
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
-
-    req.on("end", () => {
-      let data;
-
-      try {
-        data = JSON.parse(body);
-        const newTask = createTask(data);
-        res.statusCode = 201;
-        res.end(JSON.stringify(newTask));
-      } catch (error) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({ message: error.message }));
-      }
-    });
-    return;
+    return createTaskController(req, res);
   }
 
   if (req.method === "GET" && req.url.startsWith("/tasks/")) {
-    const parts = req.url.split("/");
-    const id = Number(parts[2]);
-
-    try {
-      const task = getTaskById(id);
-      res.statusCode = 200;
-      res.end(JSON.stringify(task));
-    } catch (error) {
-      res.statusCode = 404;
-      res.end(JSON.stringify({ message: error.message }));
-    }
-
-    return;
+    return getTaskByIdController(req, res);
   }
 
   if (req.method === "DELETE" && req.url.startsWith("/tasks/")) {
-    const parts = req.url.split("/");
-    const id = Number(parts[2]);
-
-    try {
-      deleteTask(id);
-      res.statusCode = 204;
-      res.end();
-    } catch (error) {
-      res.statusCode = 404;
-      res.end(JSON.stringify({ message: error.message }));
-    }
+    return deleteTaskController(req, res);
   }
 
   if (req.method === "PATCH" && req.url.startsWith("/tasks/")) {
-    const parts = req.url.split("/");
-    const id = Number(parts[2]);
-
-    let body = "";
-
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
-
-    req.on("end", () => {
-      try {
-        const data = JSON.parse(body);
-        const updatedTask = updateTask(id, data);
-        res.statusCode = 200;
-        res.end(JSON.stringify(updatedTask));
-      } catch (error) {
-        res.statusCode = 400;
-        res.end(JSON.stringify({ message: error.message }));
-      }
-    });
-    return;
+    return updateTaskController(req, res);
   }
 
   //rutas no encontradas (404)
