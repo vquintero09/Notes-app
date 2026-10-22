@@ -1,6 +1,8 @@
+import { randomUUID } from "node:crypto";
+
 const tasks = [
   {
-    id: 1,
+    id: randomUUID(),
     title: "Estudiar Node",
   },
 ];
@@ -15,7 +17,7 @@ export const getById = (id) => {
 
 export const create = (title) => {
   const newTask = {
-    id: tasks.length + 1,
+    id: randomUUID(),
     title: title,
   };
 

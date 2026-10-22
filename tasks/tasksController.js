@@ -15,7 +15,7 @@ export const getAllTasksController = (req, res) => {
 
 export const getTaskByIdController = (req, res) => {
   const parts = req.url.split("/");
-  const id = Number(parts[2]);
+  const id = parts[2];
 
   try {
     const task = getTaskById(id);
@@ -49,7 +49,7 @@ export const createTaskController = (req, res) => {
 
 export const updateTaskController = (req, res) => {
   const parts = req.url.split("/");
-  const id = Number(parts[2]);
+  const id = parts[2];
 
   let body = "";
 
@@ -72,7 +72,7 @@ export const updateTaskController = (req, res) => {
 
 export const deleteTaskController = (req, res) => {
   const parts = req.url.split("/");
-  const id = Number(parts[2]);
+  const id = parts[2];
 
   try {
     deleteTask(id);
